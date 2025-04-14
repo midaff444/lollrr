@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сайт с кнопкой</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .vote-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .name-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+
+        .vote-count {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .vote-count-animation {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        button.disabled {
+            background-color: #808080;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="vote-container">
+        <div class="vote-count">0</div>
+        <h2 class="name-title">София</h2>
+        <button onclick="vote(0)">Проголосовать</button>
+    </div>
+
+    <div class="vote-container">
+        <div class="vote-count">0</div>
+        <h2 class="name-title">Надюша</h2>
+        <button onclick="vote(1)">Проголосовать</button>
+    </div>
+
+    <script>
+        const votes = [0, 0];
+        const voteCountElements = document.querySelectorAll('.vote-count');
+        const buttons = document.querySelectorAll('button');
+        let hasVoted = localStorage.getItem('hasVoted') === 'true';
+
+        if (hasVoted) {
+            disableAllButtons();
+        }
+
+        function vote(index) {
+            if (hasVoted) return;
+            
+            votes[index]++;
+            voteCountElements[index].textContent = votes[index];
+            voteCountElements[index].classList.add('vote-count-animation');
+            setTimeout(() => {
+                voteCountElements[index].classList.remove('vote-count-animation');
+            }, 500);
+
+            hasVoted = true;
+            localStorage.setItem('hasVoted', 'true');
+            disableAllButtons();
+        }
+
+        function disableAllButtons() {
+            buttons.forEach(button => {
+                button.disabled = true;
+                button.classList.add('disabled');
+            });
+        }
+    </script>
+</body>
+</html>
